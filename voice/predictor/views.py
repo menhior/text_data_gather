@@ -115,8 +115,8 @@ def upload_file(request):
                     access_token = "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"
                     login(access_token)
 
-                    processor = AutoProcessor.from_pretrained("menhior/wav2vec2-large-xls-r-300m-azeri-colab")
-                    model = AutoModelForCTC.from_pretrained("menhior/wav2vec2-large-xls-r-300m-azeri-colab")
+                    processor = AutoProcessor.from_pretrained("menhior/wav2vec2-large-xls-r-300m-turkish-colab-full")
+                    model = AutoModelForCTC.from_pretrained("menhior/wav2vec2-large-xls-r-300m-turkish-colab-full")
 
                     list_of_predictions = []
 
@@ -132,16 +132,42 @@ def upload_file(request):
                         decoded_preds =  processor.decode(pred_ids)
                         list_of_predictions.append(decoded_preds)
                         #time.sleep(3)
-                        
+                        first_word = ''
+                        last_word = ''
+                    
+                    list_of_predictions_plus_one_word = []
                     
                     for i in range(1, len(list_of_predictions)):
                         if i-1 == 0:
-                            pass
+                            list_of_predictions_plus_one_word.append(list_of_predictions[i])
                         else:
                             first_word = list_of_predictions[i].split()[0]
                             first_word_len = len(first_word)
+                            line_with_first = list_of_predictions[i-1] + first_word
+                            line_with_last_word = last_word + list_of_predictions[i+1] 
+                            list_of_predictions_plus_one_word.append(line_with_first)
+                            list_of_predictions[i-1] = list_of_predictions[i-1] + first_word
+                            list_of_predictions[i] = list_of_predictions[i][first_word_len:]'''
+
+
+                        list_of_predictions_minus_one_word = []
+                        for i in range(1, len(list_of_predictions)):
+                        if i-1 == 0:
+                            list_of_predictions_plus_one_word.append(list_of_predictions[i])
+                            list_of_predictions_minus_one_word.append(list_of_predictions[i])
+                        else:
+                            first_word = list_of_predictions[i].split()[0]
+                            last_word = list_of_predictions[i].split()[-1]
+                            first_word_len = len(first_word)
+                            last_word_len = len(last_word)
+                            line_with_first = list_of_predictions[i-1] + first_word
+                            line_without_last_word = 
+                            line_with_last_word = last_word + list_of_predictions[i+1] 
+                            list_of_predictions_plus_one_word.append(line_with_first)
+                            list_of_predictions_minus_one_word.append(line_with_last_word)
                             list_of_predictions[i-1] = list_of_predictions[i-1] + first_word
                             list_of_predictions[i] = list_of_predictions[i][first_word_len:]
+                    
                     text = '\n'.join(list_of_predictions)
 
 
